@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet add src/SmartRecipeEngine.Application/SmartRecipeEngine.Application.csproj reference src/SmartRecipeEngine.Domain/SmartRecipeEngine.Domain.csproj)",
+      "Bash(dotnet add src/SmartRecipeEngine.Infrastructure/SmartRecipeEngine.Infrastructure.csproj reference src/SmartRecipeEngine.Application/SmartRecipeEngine.Application.csproj)",
+      "Bash(dotnet add src/SmartRecipeEngine.WebAPI/SmartRecipeEngine.WebAPI.csproj reference src/SmartRecipeEngine.Application/SmartRecipeEngine.Application.csproj src/SmartRecipeEngine.Infrastructure/SmartRecipeEngine.Infrastructure.csproj)"
+    ]
+  }
+}

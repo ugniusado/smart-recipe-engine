@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/SmartRecipeEngine.Application/SmartRecipeEngine.Application.csproj" />
+    <Project Path="src/SmartRecipeEngine.Domain/SmartRecipeEngine.Domain.csproj" />
+    <Project Path="src/SmartRecipeEngine.Infrastructure/SmartRecipeEngine.Infrastructure.csproj" />
+    <Project Path="src/SmartRecipeEngine.WebAPI/SmartRecipeEngine.WebAPI.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,30 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+wwwroot/
+
+# EF migrations temp
+*.db
+*.db-shm
+*.db-wal
+
+# Node
+node_modules/
+client/dist/
+client/.vite/
+
+# Environment
+.env
+.env.local
+*.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.swp
