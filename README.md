@@ -77,6 +77,63 @@ A full-stack **food waste reduction app** built with **.NET 10 + React 18**. Tra
 
 ---
 
+## Testing
+
+### Run all tests
+
+```bash
+# Backend unit tests (26 tests)
+dotnet test tests/SmartRecipeEngine.Tests/
+
+# Frontend unit tests (16 tests)
+cd client && npm test
+
+# E2E tests — requires the app to be running (start-dev.bat)
+cd e2e && npm test
+```
+
+### Backend — xUnit (`tests/SmartRecipeEngine.Tests/`)
+
+Uses **xUnit** + **Moq**. Tests run in isolation with mocked repositories — no database required.
+
+| File | Coverage |
+|---|---|
+| `FoodItemEntityTests` | `IsExpired`, `IsUrgent`, `IsSoon`, `IsSafe`, `DaysRemaining` edge cases across all urgency boundaries |
+| `FoodItemServiceTests` | Status changes create waste records; `Active` change does not; auto-cleanup only marks items expired > 3 days; price history upserted on create |
+| `ReportServiceTests` | Dashboard item counts; weekly savings filter (consumed only, last 7 days); monthly report periods (6 and 12 months); savings milestone threshold (7-day streak) |
+
+### Frontend — Vitest (`client/src/__tests__/`)
+
+Uses **Vitest** + **jsdom**. Pure utility tests, no API calls.
+
+| File | Coverage |
+|---|---|
+| `format.test.ts` | `formatCurrency`, `formatCurrencyCompact` (K/M/B abbreviations, NaN/Infinity guard), `formatPct`, `URGENCY_COLOR`, `URGENCY_LABEL` |
+
+### E2E — Playwright (`e2e/tests/`)
+
+Uses **Playwright** (Chromium). Spins up the Vite dev server automatically; requires the .NET API running separately.
+
+| File | Scenarios |
+|---|---|
+| `dashboard.spec.ts` | Page title, Mission Control heading, KPI cards visible, Expiry Heatmap section, all sidebar nav links |
+| `inventory.spec.ts` | Inventory heading, Add Item button, quick-add presets, search input, empty-pane message, add form opens, search filter hides rows, sidebar navigation to Reports and Recipes |
+
+### CI/CD — GitHub Actions (`.github/workflows/ci.yml`)
+
+Runs automatically on every **pull request** and **push to master**:
+
+```
+PR / push to master
+├── backend-tests    → dotnet test  (26 tests, no DB needed)
+├── frontend-tests   → vitest run   (16 tests)
+└── e2e-tests        → playwright   (runs after both above pass)
+      starts .NET API + Vite dev server
+      uploads HTML report as artifact on failure
+```
+
+---
+
 ## Project Structure
 
 ```
@@ -86,13 +143,19 @@ smart-recipe-engine/
 │   ├── SmartRecipeEngine.Application/     # DTOs, services, use cases
 │   ├── SmartRecipeEngine.Infrastructure/  # EF Core, SQLite, repositories, migrations
 │   └── SmartRecipeEngine.WebAPI/          # ASP.NET Core controllers, DI, static file hosting
+├── tests/
+│   └── SmartRecipeEngine.Tests/           # xUnit + Moq unit tests (26 tests)
 ├── client/                                # React + TypeScript frontend (Vite)
 │   └── src/
+│       ├── __tests__/    # Vitest unit tests (16 tests)
 │       ├── api/          # Axios API clients
 │       ├── components/   # FoodItemForm
 │       ├── pages/        # Dashboard, Inventory, Reports, Recipes
 │       ├── types/        # Shared TypeScript types & constants
 │       └── utils/        # formatCurrency, urgency color maps
+├── e2e/                                   # Playwright E2E tests
+│   └── tests/            # dashboard.spec.ts, inventory.spec.ts
+├── .github/workflows/ci.yml               # GitHub Actions CI/CD
 ├── start-dev.bat                          # Launch both servers
 └── SmartRecipeEngine.slnx
 ```
