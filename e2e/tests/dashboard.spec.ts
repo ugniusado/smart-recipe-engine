@@ -36,10 +36,11 @@ test.describe('Dashboard', () => {
   })
 
   test('shows KPI cards', async ({ page }) => {
-    await expect(page.getByText('Active Items')).toBeVisible()
-    await expect(page.getByText('Urgent (0-2d)')).toBeVisible()
-    await expect(page.getByText('Safe Items')).toBeVisible()
-    await expect(page.getByText('Weekly Savings')).toBeVisible()
+    const kpiGrid = page.locator('.kpi-grid')
+    await expect(kpiGrid.locator('.kpi-title', { hasText: 'Active Items' })).toBeVisible()
+    await expect(kpiGrid.locator('.kpi-title', { hasText: 'Urgent (0-2d)' })).toBeVisible()
+    await expect(kpiGrid.locator('.kpi-title', { hasText: 'Safe Items' })).toBeVisible()
+    await expect(kpiGrid.locator('.kpi-title', { hasText: 'Weekly Savings' })).toBeVisible()
   })
 
   test('shows Expiry Heatmap section', async ({ page }) => {
