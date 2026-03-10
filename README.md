@@ -4,6 +4,26 @@ A full-stack **food waste reduction app** built with **.NET 10 + React 18**. Tra
 
 ---
 
+## Screenshots
+
+### Dashboard — Mission Control
+![Dashboard](docs/screenshots/dashboard.png)
+> KPI cards with urgency glow, 4-color expiry heatmap, hazard icons for expired items, quick Consumed / Compost / Wasted actions.
+
+### Inventory — Master-Detail
+![Inventory](docs/screenshots/inventory.png)
+> Locked scrollable item list, quick-add presets, "Cook These Today" suggestions in the empty detail pane.
+
+### Reports — Waste Accountant
+![Reports](docs/screenshots/reports.png)
+> Bar chart with 6-month / 1-year toggle, Wall of Shame ranked by value lost, monthly Net breakdown.
+
+### Recipe Engine
+![Recipes](docs/screenshots/recipes.png)
+> Smart suggestion cards auto-matched to urgent ingredients, pantry staples In Stock checklist, one-click Google / AllRecipes / Yummly search.
+
+---
+
 ## Tech Stack
 
 | Layer | Technology |
