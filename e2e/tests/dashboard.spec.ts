@@ -1,9 +1,29 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
+
+const DASHBOARD_SUMMARY = {
+  totalActiveItems: 5,
+  expiredCount: 1,
+  urgentCount: 2,
+  safeCount: 2,
+  atRiskValue: 13.48,
+  expiredValue: 3.49,
+  daysWithoutWaste: 3,
+  weeklySavings: 6.47,
+}
+
+async function mockApis(page: Page) {
+  await page.route('**/api/reports/dashboard', route =>
+    route.fulfill({ json: DASHBOARD_SUMMARY })
+  )
+  await page.route('**/api/fooditems**', route =>
+    route.fulfill({ json: [] })
+  )
+}
 
 test.describe('Dashboard', () => {
   test.beforeEach(async ({ page }) => {
+    await mockApis(page)
     await page.goto('/')
-    // Wait for the page to settle after API responses
     await page.waitForLoadState('networkidle')
   })
 

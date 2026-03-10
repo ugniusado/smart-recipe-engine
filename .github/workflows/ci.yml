@@ -53,19 +53,14 @@ jobs:
         working-directory: client
 
   # ─── E2E tests ─────────────────────────────────────────────────────
+  # API calls are mocked via page.route() — no backend needed
   e2e-tests:
     name: E2E (Playwright)
     runs-on: ubuntu-latest
-    # E2E needs both the API and frontend running
     needs: [backend-tests, frontend-tests]
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '10.0.x'
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -78,24 +73,13 @@ jobs:
         run: npm ci
         working-directory: client
 
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
-        working-directory: e2e
-
       - name: Install e2e dependencies
         run: npm ci
         working-directory: e2e
 
-      - name: Start backend API
-        run: |
-          dotnet run --project src/SmartRecipeEngine.WebAPI/SmartRecipeEngine.WebAPI.csproj \
-            --configuration Release &
-          echo "Waiting for API..."
-          for i in $(seq 1 30); do
-            curl -sf http://localhost:5000/api/reports/dashboard && break || sleep 2
-          done
-        env:
-          ASPNETCORE_URLS: http://localhost:5000
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+        working-directory: e2e
 
       - name: Run E2E tests
         run: npm test

@@ -1,7 +1,17 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
+
+async function mockApis(page: Page) {
+  await page.route('**/api/fooditems**', route =>
+    route.fulfill({ json: [] })
+  )
+  await page.route('**/api/reports/dashboard', route =>
+    route.fulfill({ json: { totalActiveItems: 0, expiredCount: 0, urgentCount: 0, safeCount: 0, atRiskValue: 0, expiredValue: 0, daysWithoutWaste: 0, weeklySavings: 0 } })
+  )
+}
 
 test.describe('Inventory', () => {
   test.beforeEach(async ({ page }) => {
+    await mockApis(page)
     await page.goto('/inventory')
     await page.waitForLoadState('networkidle')
   })
@@ -21,7 +31,6 @@ test.describe('Inventory', () => {
   })
 
   test('shows search input', async ({ page }) => {
-    // placeholder uses an ellipsis character (…)
     await expect(page.getByPlaceholder('Search name or category\u2026')).toBeVisible()
   })
 
@@ -31,19 +40,25 @@ test.describe('Inventory', () => {
 
   test('opens add form when clicking Add Item', async ({ page }) => {
     await page.getByRole('button', { name: /Add Item/ }).click()
-    // Form heading for new items is "Add Food Item"
     await expect(page.getByRole('heading', { name: 'Add Food Item' })).toBeVisible()
   })
 
   test('filters list on search input', async ({ page }) => {
     const search = page.getByPlaceholder('Search name or category\u2026')
     await search.fill('zzznomatch')
-    const rows = page.locator('.item-row')
-    await expect(rows).toHaveCount(0)
+    await expect(page.locator('.item-row')).toHaveCount(0)
   })
 })
 
 test.describe('Inventory — navigation', () => {
+  test.beforeEach(async ({ page }) => {
+    await mockApis(page)
+    // Also mock reports/recipes endpoints for navigation targets
+    await page.route('**/api/reports/**', route => route.fulfill({ json: [] }))
+    await page.route('**/api/recipes/**', route => route.fulfill({ json: { urgentIngredients: [], pantryStaples: [], searchQuery: '', searchUrl: '' } }))
+    await page.route('**/api/pantrystaples**', route => route.fulfill({ json: [] }))
+  })
+
   test('navigates to Reports from sidebar', async ({ page }) => {
     await page.goto('/inventory')
     await page.getByRole('link', { name: /Reports/ }).click()
