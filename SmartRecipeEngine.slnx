@@ -5,4 +5,7 @@
     <Project Path="src/SmartRecipeEngine.Infrastructure/SmartRecipeEngine.Infrastructure.csproj" />
     <Project Path="src/SmartRecipeEngine.WebAPI/SmartRecipeEngine.WebAPI.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/SmartRecipeEngine.Tests/SmartRecipeEngine.Tests.csproj" />
+  </Folder>
 </Solution>
